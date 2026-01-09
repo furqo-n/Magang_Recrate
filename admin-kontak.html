@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Kontak - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://cdn.boxicons.com/3.0.6/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .data-table-container {
+            margin-top: 40px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-action {
+            margin: 5px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stats-card h3 {
+            color: #667eea;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stats-card p {
+            color: #666;
+            margin: 0;
+        }
+
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #667eea;
+            color: white;
+            z-index: 10;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1><i class='bx bx-data'></i> Data Kontak Masuk</h1>
+            <p>Kelola dan lihat semua data kontak yang masuk</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3 id="totalData">0</h3>
+                    <p>Total Data Tersimpan</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3 id="todayData">0</h3>
+                    <p>Data Hari Ini</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3 id="weekData">0</h3>
+                    <p>Data Minggu Ini</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-table-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3><i class='bx bx-list-ul'></i> Daftar Kontak</h3>
+                <div>
+                    <button class="btn btn-success btn-action" onclick="exportToCSV()">
+                        <i class='bx bx-download'></i> Export CSV
+                    </button>
+                    <button class="btn btn-primary btn-action" onclick="refreshData()">
+                        <i class='bx bx-refresh'></i> Refresh
+                    </button>
+                    <button class="btn btn-danger btn-action" onclick="confirmClearData()">
+                        <i class='bx bx-trash'></i> Hapus Semua
+                    </button>
+                </div>
+            </div>
+
+            <div id="dataContainer">
+                <div class="no-data">
+                    <i class='bx bx-inbox' style="font-size: 64px;"></i>
+                    <p>Memuat data...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 mb-5">
+            <a href="kontak.html" class="btn btn-outline-primary">
+                <i class='bx bx-arrow-back'></i> Kembali ke Halaman Kontak
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function () {
+            loadContactData();
+        });
+
+        function loadContactData() {
+            const data = JSON.parse(localStorage.getItem('contactFormData')) || [];
+            const dataContainer = document.getElementById('dataContainer');
+
+            // Update statistik
+            updateStatistics(data);
+
+            if (data.length === 0) {
+                dataContainer.innerHTML = `
+                    <div class="no-data">
+                        <i class='bx bx-inbox' style="font-size: 64px;"></i>
+                        <p>Belum ada data kontak tersimpan</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Urutkan data dari yang terbaru
+            data.reverse();
+
+            // Buat tabel
+            let tableHTML = `
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tanggal</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>No. Telp</th>
+                                <th>Kota</th>
+                                <th>Komentar</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            data.forEach((item, index) => {
+                tableHTML += `
+                    <tr>
+                        <td>${data.length - index}</td>
+                        <td>${item.tanggal || '-'}</td>
+                        <td>${item.nama}</td>
+                        <td>${item.email}</td>
+                        <td>${item.noTelp}</td>
+                        <td>${item.kota}</td>
+                        <td>${item.komentar.substring(0, 50)}${item.komentar.length > 50 ? '...' : ''}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="viewDetail(${data.length - index - 1})">
+                                <i class='bx bx-show'></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteItem(${data.length - index - 1})">
+                                <i class='bx bx-trash'></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            dataContainer.innerHTML = tableHTML;
+        }
+
+        function updateStatistics(data) {
+            // Total data
+            document.getElementById('totalData').textContent = data.length;
+
+            // Data hari ini
+            const today = new Date().toLocaleDateString('id-ID');
+            const todayCount = data.filter(item => {
+                const itemDate = new Date(item.timestamp).toLocaleDateString('id-ID');
+                return itemDate === today;
+            }).length;
+            document.getElementById('todayData').textContent = todayCount;
+
+            // Data minggu ini
+            const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+            const weekCount = data.filter(item => item.timestamp >= oneWeekAgo).length;
+            document.getElementById('weekData').textContent = weekCount;
+        }
+
+        function viewDetail(index) {
+            const data = JSON.parse(localStorage.getItem('contactFormData')) || [];
+            const item = data.reverse()[index];
+
+            const modalHTML = `
+                <div class="modal fade" id="detailModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail Kontak</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Nama Lengkap:</strong>
+                                        <p>${item.nama}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Email:</strong>
+                                        <p>${item.email}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>No. Telepon:</strong>
+                                        <p>${item.noTelp}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Kota:</strong>
+                                        <p>${item.kota}</p>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <strong>Komentar:</strong>
+                                        <p>${item.komentar}</p>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <strong>Waktu Submit:</strong>
+                                        <p>${item.tanggal}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Hapus modal lama jika ada
+            const existingModal = document.getElementById('detailModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+
+        function deleteItem(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                let data = JSON.parse(localStorage.getItem('contactFormData')) || [];
+                data = data.reverse();
+                data.splice(index, 1);
+                data.reverse();
+                localStorage.setItem('contactFormData', JSON.stringify(data));
+                loadContactData();
+                showNotification('Data berhasil dihapus!', 'success');
+            }
+        }
+
+        function confirmClearData() {
+            if (confirm('PERINGATAN: Anda akan menghapus SEMUA data kontak. Tindakan ini tidak dapat dibatalkan. Lanjutkan?')) {
+                localStorage.removeItem('contactFormData');
+                loadContactData();
+                showNotification('Semua data telah dihapus!', 'info');
+            }
+        }
+
+        function refreshData() {
+            loadContactData();
+            showNotification('Data berhasil dimuat ulang!', 'success');
+        }
+
+        function exportToCSV() {
+            const data = JSON.parse(localStorage.getItem('contactFormData')) || [];
+
+            if (data.length === 0) {
+                alert('Tidak ada data untuk diekspor');
+                return;
+            }
+
+            // Buat CSV header
+            let csv = 'No,Tanggal,Nama,Email,No. Telp,Kota,Komentar\n';
+
+            // Tambahkan data
+            data.reverse().forEach((item, index) => {
+                csv += `${index + 1},"${item.tanggal}","${item.nama}","${item.email}","${item.noTelp}","${item.kota}","${item.komentar.replace(/"/g, '""')}"\n`;
+            });
+
+            // Download CSV
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `data_kontak_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Data berhasil diekspor ke CSV!', 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

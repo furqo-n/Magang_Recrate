@@ -130,3 +130,104 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+// Contact Form Submission Handler
+document.addEventListener('DOMContentLoaded', function () {
+    const contactForm = document.querySelector('form');
+
+    if (contactForm && window.location.pathname.includes('kontak.html')) {
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Mencegah form reload halaman
+
+            // Ambil nilai dari form
+            const nama = document.getElementById('Nama').value.trim();
+            const email = document.getElementById('Email').value.trim();
+            const noTelp = document.getElementById('NoTelp').value.trim();
+            const kota = document.getElementById('Kota').value.trim();
+            const komentar = document.getElementById('Komentar').value.trim();
+            const agreement = document.getElementById('exampleCheck1').checked;
+
+            // Validasi form
+            if (!nama || !email || !noTelp || !kota || !komentar) {
+                showNotification('Mohon lengkapi semua field!', 'danger');
+                return;
+            }
+
+            if (!agreement) {
+                showNotification('Anda harus menyetujui kebijakan penyimpanan data!', 'warning');
+                return;
+            }
+
+            // Validasi email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Format email tidak valid!', 'danger');
+                return;
+            }
+
+            // Buat object data form
+            const formData = {
+                nama: nama,
+                email: email,
+                noTelp: noTelp,
+                kota: kota,
+                komentar: komentar,
+                tanggal: new Date().toLocaleString('id-ID'),
+                timestamp: Date.now()
+            };
+
+            // Ambil data yang sudah ada dari localStorage
+            let existingData = JSON.parse(localStorage.getItem('contactFormData')) || [];
+
+            // Tambahkan data baru
+            existingData.push(formData);
+
+            // Simpan ke localStorage
+            localStorage.setItem('contactFormData', JSON.stringify(existingData));
+
+            // Tampilkan notifikasi sukses
+            showNotification('Data berhasil disimpan! Terima kasih telah menghubungi kami.', 'success');
+
+            // Reset form
+            contactForm.reset();
+
+            // Log data (untuk keperluan debugging)
+            console.log('Data yang disimpan:', formData);
+            console.log('Total data tersimpan:', existingData.length);
+        });
+    }
+});
+
+// Fungsi untuk menampilkan notifikasi
+function showNotification(message, type = 'success') {
+    // Buat element notifikasi
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '300px';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+    // Tambahkan ke body
+    document.body.appendChild(notification);
+
+    // Hapus notifikasi setelah 5 detik
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// Fungsi untuk melihat semua data yang tersimpan (opsional - untuk admin)
+function viewAllContactData() {
+    const data = JSON.parse(localStorage.getItem('contactFormData')) || [];
+    console.table(data);
+    return data;
+}
+
+// Fungsi untuk menghapus semua data (opsional - untuk admin)
+function clearAllContactData() {
+    localStorage.removeItem('contactFormData');
+    console.log('Semua data kontak telah dihapus');
+}
