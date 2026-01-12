@@ -280,7 +280,9 @@
 }
 
 .btn-details:hover {
-    color: white;
+    transform: scale(1.05);
+    background: #FDBF11;
+    color: rgb(0, 0, 0);
     opacity: 0.9;
 }
 
