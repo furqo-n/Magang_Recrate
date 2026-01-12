@@ -102,7 +102,7 @@
     <section class="py-5 bg-white">
         <div class="container py-5">
             <div class="row align-items-center">
-                <div class="col-lg-5 mb-5 mb-lg-0">
+                <div class="col-lg-5 mb-5 mb-lg-0 animate-from-left">
                     <h2 class="display-5 fw-bold raleway-font mb-3">Apa yang sedang anda cari?</h2>
                     <div
                         style="width: 80px; height: 5px; background: #FDBF11; border-radius: 5px; margin-bottom: 2rem;">
@@ -112,7 +112,7 @@
                         menyediakan Perangkat Lunak yang berkualitas.
                     </p>
                 </div>
-                <div class="col-lg-6 offset-lg-1">
+                <div class="col-lg-6 offset-lg-1 animate-from-right">
                     <!-- Service List Items -->
                     <div class="service-list-item">
                         <div class="service-icon-circle me-4">
@@ -201,49 +201,85 @@
                 </div>
             </div>
 
-            <!-- Horizontal Scrolling Container -->
-            <div class="horizontal-scroll-container">
-                <div class="pill-card">
-                    <i class='bx bx-community icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Tim</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-code icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Clean Code</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-diamond-alt icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Terjangkau</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-sitemap icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Scrum</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-like icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Perangkat Lunak Berkualitas</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-check-square icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Transparan & Jujur</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-copy-list icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">TDD</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-rocket icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Inovatif</h5>
-                </div>
-                <div class="pill-card">
-                    <i class='bx bx-light-bulb-alt icon-gradient fs-1 mb-2'></i>
-                    <h5 class="fw-bold">Creatif</h5>
-                </div>
-            </div>
+            <!-- Infinite Marquee Container -->
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <!-- Original Items -->
+                    <div class="pill-card">
+                        <i class='bx bx-community icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Tim</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-code icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Clean Code</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-diamond-alt icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Terjangkau</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-sitemap icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Scrum</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-like icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Perangkat Lunak Berkualitas</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-check-square icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Transparan & Jujur</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-copy-list icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">TDD</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-rocket icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Inovatif</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-light-bulb-alt icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Creatif</h5>
+                    </div>
 
-            <div class="text-center mt-3 text-muted">
-                <small><i class='bx bx-left-arrow-alt'></i> Geser untuk melihat lebih banyak <i
-                        class='bx bx-right-arrow-alt'></i></small>
+                    <!-- Duplicated Items for Seamless Loop -->
+                    <div class="pill-card">
+                        <i class='bx bx-community icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Tim</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-code icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Clean Code</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-diamond-alt icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Terjangkau</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-sitemap icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Scrum</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-like icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Perangkat Lunak Berkualitas</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-check-square icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Transparan & Jujur</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-copy-list icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">TDD</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-rocket icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Inovatif</h5>
+                    </div>
+                    <div class="pill-card">
+                        <i class='bx bx-light-bulb-alt icon-gradient fs-1 mb-2'></i>
+                        <h5 class="fw-bold">Creatif</h5>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

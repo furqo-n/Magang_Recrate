@@ -231,3 +231,24 @@ function clearAllContactData() {
     localStorage.removeItem('contactFormData');
     console.log('Semua data kontak telah dihapus');
 }
+
+// Scroll Reveal Animation
+document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2 // Trigger when 20% visible
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show-animate');
+                observer.unobserve(entry.target); // Animate once
+            }
+        });
+    }, observerOptions);
+
+    const animatedElements = document.querySelectorAll('.animate-from-left, .animate-from-right');
+    animatedElements.forEach(el => observer.observe(el));
+});

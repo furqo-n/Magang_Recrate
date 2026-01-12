@@ -121,18 +121,53 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.horizontal-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    padding: 20px 5px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* Firefox */
+/* Marquee / Infinite Scroll */
+.marquee-container {
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0;
+    position: relative;
 }
 
-.horizontal-scroll-container::-webkit-scrollbar {
-    display: none;
-    /* Chrome/Safari */
+.marquee-container::before,
+.marquee-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.marquee-container::before {
+    left: 0;
+    background: linear-gradient(to right, #f9f9f9, transparent);
+}
+
+.marquee-container::after {
+    right: 0;
+    background: linear-gradient(to left, #f9f9f9, transparent);
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: scroll 30s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 /* Project Carousel & Cards */
@@ -1884,4 +1919,26 @@
         margin-top: 10px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     }
+}
+
+/* Scroll Animation Classes */
+.animate-from-left {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease-out;
+}
+
+.animate-from-right {
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 1s ease-out;
+}
+
+.show-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+body {
+    overflow-x: hidden;
 }
